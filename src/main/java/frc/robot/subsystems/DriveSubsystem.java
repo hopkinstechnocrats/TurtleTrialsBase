@@ -29,6 +29,10 @@ public class DriveSubsystem extends SubsystemBase {
     leftFollower = new WPI_TalonFX(Constants.leftFollowerCANID);
     rightMaster = new WPI_TalonFX(Constants.rightMasterCANID);
     rightFollower = new WPI_TalonFX(Constants.rightFollowerCANID);
+    leftMaster.configFactoryDefault();
+    leftFollower.configFactoryDefault();
+    rightMaster.configFactoryDefault();
+    rightFollower.configFactoryDefault();
     leftMaster.setNeutralMode(NeutralMode.Brake);
     rightMaster.setNeutralMode(NeutralMode.Brake);
     leftFollower.setNeutralMode(NeutralMode.Brake);
