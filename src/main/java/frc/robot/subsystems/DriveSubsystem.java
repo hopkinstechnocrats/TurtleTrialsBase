@@ -44,8 +44,6 @@ public class DriveSubsystem extends SubsystemBase {
     );
     leftFollower.follow(leftMaster);
     rightFollower.follow(rightMaster);
-
-    limitSwitch = new DigitalInput(Constants.limitSwitchPort);
     
   }
 
@@ -57,8 +55,6 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println(limitSwitch.get());
-    SmartDashboard.putBoolean("Limit Switch State", limitSwitch.get());
 
     
   }

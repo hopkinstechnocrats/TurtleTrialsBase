@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.HighShelfSubsystem;
-import frc.robot.subsystems.MediumShelfSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.DriveToWall;
 
@@ -24,8 +22,6 @@ import frc.robot.commands.DriveToWall;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  private final HighShelfSubsystem highShelfSubsystem = new HighShelfSubsystem();
-  private final MediumShelfSubsystem mediumShelfSubsystem = new MediumShelfSubsystem();
 
   private final XboxController driveController = new XboxController(Constants.XboxControllerPort);
   
@@ -38,11 +34,10 @@ public class RobotContainer {
     driveSubsystem.setDefaultCommand(
             new RunCommand(
                     () -> {
-                      driveSubsystem.drive(-0.55*driveController.getY(GenericHID.Hand.kLeft), -0.55*driveController.getY(GenericHID.Hand.kRight));
+                      driveSubsystem.drive(-0.55*driveController.getLeftY(), -0.55*driveController.getRightY());
                     }
             , driveSubsystem)
     );
-    highShelfSubsystem.setDefaultCommand(new RunCommand(() -> highShelfSubsystem.spin(0), highShelfSubsystem));
   
   }
 
@@ -54,39 +49,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     JoystickButton aButton = new JoystickButton(operatorController, 1);
-    aButton.whileHeld(new RunCommand(
-      () -> {
-        mediumShelfSubsystem.spin(-0.15);
-      }, 
-      mediumShelfSubsystem));
-      JoystickButton bButton = new JoystickButton(operatorController, 2);
-      bButton.whileHeld(new RunCommand(
-        () -> {
-          mediumShelfSubsystem.spin(-0.3);
-        }, 
-        mediumShelfSubsystem));
-        mediumShelfSubsystem.setDefaultCommand(new RunCommand(
-          () -> {
-            mediumShelfSubsystem.spin(0);
-          }, 
-          mediumShelfSubsystem));
-          JoystickButton aDriverButton = new JoystickButton(driveController, 1);
-    aDriverButton.whileHeld(new RunCommand(
-      () -> {
-        driveSubsystem.drive(-.5, -.5);
-      }, 
-      driveSubsystem));
-      JoystickButton bDriverButton = new JoystickButton(driveController, 2
-      );
-    bDriverButton.whileHeld(new RunCommand(
-      () -> {
-        driveSubsystem.drive(0.6 , 0.7);
-
-      }, 
-      driveSubsystem));
-
+    JoystickButton bButton = new JoystickButton(operatorController, 2);
+    JoystickButton aDriverButton = new JoystickButton(driveController, 1);
+    JoystickButton bDriverButton = new JoystickButton(driveController, 2);
   }
-
+   
   
 
   public DriveSubsystem getDriveSubsystem() {
@@ -102,12 +69,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return new SequentialCommandGroup(
-      new DriveToWall(driveSubsystem),
-      new RunCommand(
-        () -> {
-          highShelfSubsystem.spin(-0.5);
-        }
-        , highShelfSubsystem).withTimeout(1)
     );
   }
 }
