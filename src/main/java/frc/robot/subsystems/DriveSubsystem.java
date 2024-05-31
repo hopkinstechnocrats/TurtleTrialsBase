@@ -4,10 +4,11 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,34 +17,35 @@ import frc.robot.Constants;
 
 public class DriveSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  WPI_TalonFX leftMaster;
-  WPI_TalonFX leftFollower;
-  WPI_TalonFX rightMaster;
-  WPI_TalonFX rightFollower;
+  TalonFX leftLeader;
+  TalonFX leftFollower;
+  TalonFX rightLeader;
+  TalonFX rightFollower;
   DifferentialDrive drive;
   public DigitalInput limitSwitch;
   
 
   public DriveSubsystem() {
-    leftMaster = new WPI_TalonFX(Constants.leftMasterCANID);
-    leftFollower = new WPI_TalonFX(Constants.leftFollowerCANID);
-    rightMaster = new WPI_TalonFX(Constants.rightMasterCANID);
-    rightFollower = new WPI_TalonFX(Constants.rightFollowerCANID);
-    leftMaster.configFactoryDefault();
-    leftFollower.configFactoryDefault();
-    rightMaster.configFactoryDefault();
-    rightFollower.configFactoryDefault();
-    leftMaster.setNeutralMode(NeutralMode.Brake);
-    rightMaster.setNeutralMode(NeutralMode.Brake);
-    leftFollower.setNeutralMode(NeutralMode.Brake);
-    rightFollower.setNeutralMode(NeutralMode.Brake);
+    leftLeader = new TalonFX(Constants.leftLeaderCANID);
+    leftFollower = new TalonFX(Constants.leftFollowerCANID);
+    rightLeader = new TalonFX(Constants.rightLeaderCANID);
+    rightFollower = new TalonFX(Constants.rightFollowerCANID);
+    leftLeader.getConfigurator().apply(new TalonFXConfiguration());
+    leftFollower.getConfigurator().apply(new TalonFXConfiguration());
+    rightLeader.getConfigurator().apply(new TalonFXConfiguration());
+    rightFollower.getConfigurator().apply(new TalonFXConfiguration());
+    leftLeader.setNeutralMode(NeutralModeValue.Brake);
+    rightLeader.setNeutralMode(NeutralModeValue.Brake);
+    leftFollower.setNeutralMode(NeutralModeValue.Brake);
+    rightFollower.setNeutralMode(NeutralModeValue.Brake);
 
     drive = new DifferentialDrive(
-      leftMaster,
-      rightMaster
+      leftLeader,
+      rightLeader
     );
-    leftFollower.follow(leftMaster);
-    rightFollower.follow(rightMaster);
+    leftFollower.setControl(new Follower(leftLeader.getDeviceID(), false));
+    rightFollower.setControl(new Follower(leftLeader.getDeviceID(), false));
+    
     
   }
 
